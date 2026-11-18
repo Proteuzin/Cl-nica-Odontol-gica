@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="pt-br" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Clínica Odontológica</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/appClinicaOdontologica.styles.css" asp-append-version="true" />
+</head>
+<body class="bg-black text-light d-flex flex-column min-vh-100">
+    <!-- Barra Superior -->
+    <header>
+        <nav class="navbar navbar-dark bg-dark border-bottom border-secondary py-3 px-4">
+            <a class="navbar-brand fw-bold text-primary fs-4 mb-0" asp-controller="Home" asp-action="Index">
+                Clínica Odontológica
+            </a>
+            @if (Context.Session.GetString("UsuarioNome") != null)
+            {
+                <div class="d-flex align-items-center gap-3 ms-auto">
+                    <span class="text-light">
+                        Olá, <strong>@Context.Session.GetString("UsuarioNome")</strong>
+                    </span>
+                    <a class="btn btn-danger btn-sm px-3 fw-semibold" asp-controller="Login" asp-action="Logout">Sair</a>
+                </div>
+            }
+        </nav>
+    </header>
+
+    <!-- Corpo Principal: Barra Lateral + Conteúdo -->
+    <div class="container-fluid flex-grow-1 d-flex p-0">
+        <!-- Menu Lateral Organizado -->
+        <aside class="bg-dark border-end border-secondary p-3 d-flex flex-column" style="width: 240px; min-width: 240px;">
+            <span class="text-uppercase text-secondary small fw-bold px-2 mb-3">Navegação</span>
+            <ul class="nav nav-pills flex-column gap-2">
+                <li class="nav-item">
+                    <a class="nav-link text-light border border-secondary bg-black" asp-controller="Home" asp-action="Index">Dashboard / Gráficos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light border border-secondary bg-black" asp-controller="Pacientes" asp-action="Index">Pacientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light border border-secondary bg-black" asp-controller="Procedimentoes" asp-action="Index">Procedimentos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light border border-secondary bg-black" asp-controller="Agendamentoes" asp-action="Index">Agendamentos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light border border-secondary bg-black" asp-controller="Usuarios" asp-action="Index">Usuários</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Área Central -->
+        <main role="main" class="flex-grow-1 p-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Rodapé Centralizado -->
+    <footer class="bg-dark border-top border-secondary text-light py-3 mt-auto text-center" style="position: relative; width: 100%; line-height: normal;">
+        <span class="small">&copy; 2026 - Clínica Odontológica</span>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

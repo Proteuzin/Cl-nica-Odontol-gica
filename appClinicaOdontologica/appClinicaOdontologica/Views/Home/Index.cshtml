@@ -1,0 +1,97 @@
+﻿@using System.Text.Json
+@{
+    ViewData["Title"] = "Dashboard";
+    var labelsProc = JsonSerializer.Serialize(ViewBag.LabelsProcedimentos ?? new List<string>());
+    var valoresProc = JsonSerializer.Serialize(ViewBag.ValoresProcedimentos ?? new List<int>());
+}
+
+<h2 class="fw-bold text-white mb-4">Painel Geral da Clínica</h2>
+
+<!-- Cards de Resumo -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card bg-dark border-secondary p-3">
+            <span class="text-secondary small">Total de Pacientes</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">@ViewBag.TotalPacientes</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-dark border-secondary p-3">
+            <span class="text-secondary small">Procedimentos Registrados</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">@ViewBag.TotalProcedimentos</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-dark border-secondary p-3">
+            <span class="text-secondary small">Consultas Agendadas</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">@ViewBag.TotalAgendamentos</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-dark border-secondary p-3">
+            <span class="text-secondary small">Operadores Ativos</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">@ViewBag.TotalUsuarios</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos Centrais -->
+<div class="row g-4">
+    <div class="col-md-7">
+        <div class="card bg-dark border-secondary p-4 h-100">
+            <h5 class="fw-bold text-white mb-3">Visão Geral de Registros no Sistema</h5>
+            <canvas id="graficoGeral" height="140"></canvas>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card bg-dark border-secondary p-4 h-100">
+            <h5 class="fw-bold text-white mb-3">Distribuição por Procedimento</h5>
+            <canvas id="graficoProcedimentos" height="140"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://jsdelivr.net"></script>
+    <script>
+        const ctxGeral = document.getElementById('graficoGeral');
+        new Chart(ctxGeral, {
+            type: 'bar',
+            data: {
+                labels: ['Pacientes', 'Procedimentos', 'Agendamentos', 'Usuários'],
+                datasets: [{
+                    label: 'Quantidade Cadastrada',
+                    data: [@ViewBag.TotalPacientes, @ViewBag.TotalProcedimentos, @ViewBag.TotalAgendamentos, @ViewBag.TotalUsuarios],
+                    backgroundColor: '#0d6efd',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#adb5bd', stepSize: 1 }, grid: { color: '#2b3035' } },
+                    x: { ticks: { color: '#f8f9fa' }, grid: { display: false } }
+                }
+            }
+        });
+
+        const ctxProc = document.getElementById('graficoProcedimentos');
+        new Chart(ctxProc, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(labelsProc),
+                datasets: [{
+                    data: @Html.Raw(valoresProc),
+                    backgroundColor: ['#0d6efd', '#3d8bfd', '#6ea8fe', '#9ec5fe'],
+                    borderColor: '#212529',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8f9fa' } }
+                }
+            }
+        });
+    </script>
+}
